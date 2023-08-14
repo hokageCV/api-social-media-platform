@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
@@ -15,13 +16,27 @@ const createToken = ({ _id, email }: CreateTokenType) => {
 };
 // =============================================
 
+export async function createUser(req: Request, res: Response) {
+    const { name, email, password } = req.body;
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = await UserModel.create({ name, email, password: hashedPassword });
+        const token = createToken({ _id: user._id.toString(), email: user.email });
+
+        res.status(200).json({ user, token });
+    } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+    }
+}
+
 export async function authenticateUser(req: Request, res: Response) {
     const { email, password } = req.body;
     try {
         const user = await UserModel.findOne({ email });
         if (!user) return res.status(400).json({ message: 'email not found' });
 
-        const isPasswordCorrect = password === user.password;
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) return res.status(400).json({ message: 'Incorrect Password' });
 
         const token = createToken({ _id: user._id.toString(), email: user.email });
