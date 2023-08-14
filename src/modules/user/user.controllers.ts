@@ -98,8 +98,14 @@ export async function unFollow(req: Request, res: Response) {
     }
 }
 
-export function getSelfData(req: Request, res: Response) {
+export async function getSelfData(req: Request, res: Response) {
+    const { userID } = req;
+
     try {
+        const user = await UserModel.findById(userID);
+        if (!user) return res.status(400).json({ message: 'User not found' });
+
+        res.status(200).json({ data: user });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }
