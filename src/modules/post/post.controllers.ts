@@ -75,7 +75,17 @@ export async function unlikePost(req: Request, res: Response) {
 }
 
 export async function getPostData(req: Request, res: Response) {
+    const { id: postID } = req.params;
+    console.log('🔥 got request');
+
     try {
+        const post = await PostModel.findById(postID).populate({
+            path: 'comments',
+            select: 'comment',
+        });
+        if (!post) return res.status(400).json({ message: 'Post not found' });
+
+        return res.status(200).json({ message: 'Post found', post });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }

@@ -32,7 +32,7 @@ router.post('/posts', requireAuth, createPost);
 router.delete('/posts/:id', requireAuth, deletePost);
 router.post('/like/:id', requireAuth, likePost);
 router.post('/unlike/:id', requireAuth, unlikePost);
-router.post('/posts/:id', requireAuth, getPostData);
+router.get('/posts/:id', getPostData);
 router.get('/all_posts', requireAuth, getAllPostByUser);
 
 // comment routes
