@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
@@ -22,7 +21,7 @@ export async function authenticateUser(req: Request, res: Response) {
         const user = await UserModel.findOne({ email });
         if (!user) return res.status(400).json({ message: 'email not found' });
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        const isPasswordCorrect = password === user.password;
         if (!isPasswordCorrect) return res.status(400).json({ message: 'Incorrect Password' });
 
         const token = createToken({ _id: user._id.toString(), email: user.email });
