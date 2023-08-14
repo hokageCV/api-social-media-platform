@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from './middleware/requireAuth';
+import { createComment } from './modules/comment/comment.controllers';
 import {
     createPost,
     deletePost,
@@ -21,6 +22,7 @@ const router = Router();
 // user routes
 router.post('/create-user', createUser);
 router.post('/authenticate', authenticateUser);
+
 router.post('/follow/:id', requireAuth, follow);
 router.post('/unfollow/:id', requireAuth, unFollow);
 router.get('/user', requireAuth, getSelfData);
@@ -32,5 +34,8 @@ router.post('/like/:id', requireAuth, likePost);
 router.post('/unlike/:id', requireAuth, unlikePost);
 router.post('/posts/:id', requireAuth, getPostData);
 router.get('/all_posts', requireAuth, getAllPostByUser);
+
+// comment routes
+router.post('/comment/:id', requireAuth, createComment);
 
 export default router;
