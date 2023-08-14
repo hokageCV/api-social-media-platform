@@ -66,8 +66,33 @@ export async function follow(req: Request, res: Response) {
     }
 }
 
-export function unFollow(req: Request, res: Response) {
+export async function unFollow(req: Request, res: Response) {
+    const { id } = req.params;
+    const { userID } = req;
     try {
+        const otherUserID = new ObjectId(id);
+
+        const otherUserExits = await UserModel.findById(otherUserID);
+        if (!otherUserExits) return res.status(400).json({ message: 'User not found' });
+
+        const user = await UserModel.findById(userID);
+        if (!user) return res.status(400).json({ message: 'User not found' });
+
+        if (!user.following.includes(otherUserID))
+            return res.status(400).json({ message: 'Not following' });
+
+        const userUpdates = UserModel.updateOne(
+            { _id: userID },
+            { $pull: { following: otherUserID } }
+        );
+        const otherUserUpdates = UserModel.updateOne(
+            { _id: otherUserID },
+            { $pull: { followers: userID } }
+        );
+
+        await Promise.all([userUpdates, otherUserUpdates]);
+
+        res.status(200).json({ message: 'Unfollowed' });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }
