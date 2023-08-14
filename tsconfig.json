@@ -1,15 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "NodeNext",
-    "lib": ["es6"],
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "moduleResolution": "nodenext"
-  }
+    "compilerOptions": {
+        "target": "es6",
+        "module": "NodeNext",
+        "lib": ["es6"],
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "strict": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "moduleResolution": "nodenext",
+
+        "types": ["./src/types.d.ts"]
+    }
 }
