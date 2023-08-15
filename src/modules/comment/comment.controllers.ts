@@ -4,7 +4,7 @@ import { CommentModel } from './comment.model';
 
 export async function createComment(req: Request, res: Response) {
     const { id: postID } = req.params;
-    const { comment } = req.body;
+    const { Comment: comment } = req.body;
     const { userID } = req;
 
     try {
@@ -25,7 +25,7 @@ export async function createComment(req: Request, res: Response) {
             return res.status(400).json({ message: 'Post not found' });
         }
 
-        return res.status(201).json({ message: 'Comment created successfully' });
+        return res.status(201).json({ 'Comment-ID': createdComment._id });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }

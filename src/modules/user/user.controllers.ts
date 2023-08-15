@@ -18,6 +18,7 @@ const createToken = ({ _id, email }: CreateTokenType) => {
 
 export async function createUser(req: Request, res: Response) {
     const { name, email, password } = req.body;
+
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -32,6 +33,7 @@ export async function createUser(req: Request, res: Response) {
 
 export async function authenticateUser(req: Request, res: Response) {
     const { email, password } = req.body;
+
     try {
         const user = await UserModel.findOne({ email });
         if (!user) return res.status(400).json({ message: 'email not found' });
@@ -41,7 +43,7 @@ export async function authenticateUser(req: Request, res: Response) {
 
         const token = createToken({ _id: user._id.toString(), email: user.email });
 
-        res.status(200).json({ user, token });
+        res.status(200).json({ token });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }
@@ -83,6 +85,7 @@ export async function follow(req: Request, res: Response) {
 export async function unFollow(req: Request, res: Response) {
     const { id } = req.params;
     const { userID } = req;
+
     try {
         const otherUserID = new ObjectId(id);
 
@@ -119,7 +122,11 @@ export async function getSelfData(req: Request, res: Response) {
         const user = await UserModel.findById(userID);
         if (!user) return res.status(400).json({ message: 'User not found' });
 
-        res.status(200).json({ data: user });
+        res.status(200).json({
+            'User Name': user.name,
+            followers: user.followers.length,
+            following: user.following.length,
+        });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }

@@ -7,6 +7,7 @@ type PostSchema = {
     postBy: string;
     likes: Types.ObjectId[];
     comments: Types.ObjectId[];
+    createdAt: Date;
 };
 
 const PostSchema = new Schema<PostSchema>(
