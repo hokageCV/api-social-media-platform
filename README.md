@@ -1,8 +1,1 @@
-# Template for NodeJS API
-
-
-Configurations
-- Typescript
-- Zod
-- Routes
-- Logger
+# API for Social Media Platform
